@@ -1,0 +1,26 @@
+{
+  "name": "api",
+  "version": "0.0.1",
+  "private": false,
+  "description": "Cyber API",
+  "repository": "github:cletqui/api",
+  "homepage": "https://api.cybai.re/",
+  "license": "MIT",
+  "author": {
+    "name": "cletqui"
+  },
+  "scripts": {
+    "dev": "wrangler dev src/index.ts",
+    "deploy": "wrangler deploy --minify src/index.ts",
+    "logs": "wrangler tail"
+  },
+  "dependencies": {
+    "@hono/swagger-ui": "^0.2.1",
+    "@hono/zod-openapi": "^0.10.0",
+    "hono": "^4.2.2"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240403.0",
+    "wrangler": "^3.47.0"
+  }
+}
