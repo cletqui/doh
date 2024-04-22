@@ -1,12 +1,12 @@
 import { Hono } from "hono";
 
-const ip = new Hono();
+const ipinfo = new Hono();
 
-ip.get("/:ip", async (c) => {
+ipinfo.get("/:ip", async (c) => {
   const ip = c.req.param("ip");
   const response = await fetch(`http://ip-api.com/json/${ip}`);
   const json = await response.json();
   return c.json(json);
 });
 
-export default ip;
+export default ipinfo;
