@@ -34,7 +34,7 @@ async function dohQuery(
 
 /* SWAGGER */
 
-const ParamSchema = z.object({
+const QuerySchema = z.object({
   name: z.string({ required_error: "Name is required." }).openapi({
     param: {
       name: "name",
@@ -43,11 +43,9 @@ const ParamSchema = z.object({
     example: "example.com",
     title: "Name",
   }),
-});
-
-const QuerySchema = z.object({
   resolver: z
     .string()
+    .optional()
     .default("cloudflare")
     .openapi({
       param: {
@@ -56,7 +54,18 @@ const QuerySchema = z.object({
       },
       default: "cloudflare",
       example: "cloudflare",
-      title: "Endpoint",
+      title: "Resolver",
+    }),
+  type: z
+    .string()
+    .optional()
+    .openapi({
+      param: {
+        name: "type",
+        in: "query",
+      },
+      example: "A",
+      title: "Type",
     }),
 });
 
@@ -101,8 +110,8 @@ const NslookupSchema = z
 
 const route = createRoute({
   method: "get",
-  path: "/{name}",
-  request: { params: ParamSchema, query: QuerySchema },
+  path: "",
+  request: { query: QuerySchema },
   responses: {
     200: {
       content: {
@@ -118,9 +127,8 @@ const route = createRoute({
 /* ROUTE */
 
 nslookup.openapi(route, async (c: any) => {
-  const { name } = c.req.valid("param");
-  const { resolver } = c.req.valid("query");
-  console.log(name, resolver);
+  const { name, resolver, type } = c.req.valid("query");
+  console.log(name, resolver, type); // TODO implement type selection
   const [A, AAAA, CNAME, TXT, NS, MX] = await Promise.all([
     dohQuery(name, "A", resolver),
     dohQuery(name, "AAAA", resolver),
@@ -129,8 +137,7 @@ nslookup.openapi(route, async (c: any) => {
     dohQuery(name, "NS", resolver),
     dohQuery(name, "MX", resolver),
   ]);
-  const json = { name, A, AAAA, CNAME, NS, MX, TXT };
-  return c.json(json);
+  return c.json({ name, resolver, A, AAAA, CNAME, NS, MX, TXT });
 });
 
 export default nslookup;
