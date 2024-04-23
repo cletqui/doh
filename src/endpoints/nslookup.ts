@@ -16,18 +16,20 @@ async function dohQuery(
 ): Promise<string[]> {
   const endpoint =
     resolver === "google"
-      ? "dns.google/resolve" // ""8.8.8.8"
-      : "cloudflare-dns.com/dns-query"; // "1.1.1.1"
+      ? "dns.google/resolve"
+      : resolver === "quad9"
+      ? "dns.quad9.net:5053/dns-query"
+      : "cloudflare-dns.com/dns-query";
   const response = await fetch(
-    `https://${endpoint}?name=${name}&type=${type}`, // TODO try type=255
+    `https://${endpoint}?name=${name}&type=${type}`,
     {
       method: "GET",
       headers: {
-        accept: "application/dns-json",
+        Accept: "application/dns-json",
+        "User-Agent": "doh",
       },
     }
   );
-  console.log(`https://${endpoint}?name=${name}&type=${type}`);
   console.log(response.ok, response.status, response.statusText);
   return await response.json();
 }
