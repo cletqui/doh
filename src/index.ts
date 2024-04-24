@@ -1,3 +1,4 @@
+import { cors } from "hono/cors";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
 
@@ -7,6 +8,15 @@ import ipinfo from "./endpoints/ipinfo";
 import nslookup from "./endpoints/nslookup";
 
 const app = new OpenAPIHono();
+
+/* CORS */
+app.use(
+  "/*",
+  cors({
+    origin: "*",
+    allowMethods: ["GET", "POST"],
+  })
+);
 
 /* ROUTES */
 // app.route("/users", users);
