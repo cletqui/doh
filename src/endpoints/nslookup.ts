@@ -19,6 +19,8 @@ async function dohQuery(
       ? "dns.google/resolve"
       : resolver === "quad9"
       ? "dns.quad9.net:5053/dns-query"
+      : resolver === "dns0"
+      ? "dns0.eu/dns-query"
       : "cloudflare-dns.com/dns-query";
   const response = await fetch(
     `https://${endpoint}?name=${name}&type=${type}`,
