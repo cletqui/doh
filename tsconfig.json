@@ -12,6 +12,6 @@
     ],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
   },
 }

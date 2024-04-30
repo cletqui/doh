@@ -1,28 +1,24 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
 
-import users from "./endpoints/users";
-import whois from "./endpoints/whois";
-import ipinfo from "./endpoints/ipinfo";
-import nslookup from "./endpoints/nslookup";
+// import users from "./endpoints/users";
+import dnsQuery from "./endpoints/dns-query";
 
 const app = new OpenAPIHono();
 
 /* ROUTES */
 // app.route("/users", users);
-app.route("/whois", whois);
-app.route("/ipinfo", ipinfo);
-app.route("/nslookup", nslookup);
+app.route("/dns-query", dnsQuery);
 
 /* SWAGGER */
-app.get("/doc", swaggerUI({ url: "/doc/json" }));
+app.get("/", swaggerUI({ url: "/json" }));
 
 /* JSON */
-app.doc("/doc/json", {
+app.doc("/json", {
   openapi: "3.0.0",
   info: {
-    version: "0.0.1",
-    title: "API",
+    version: "0.1.0",
+    title: "DoH",
   },
 });
 

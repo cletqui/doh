@@ -1,10 +1,13 @@
 {
-  "name": "api",
-  "version": "0.0.2",
+  "name": "doh",
+  "version": "0.1.0",
   "private": false,
-  "description": "Cyber API",
-  "repository": "github:cletqui/api",
-  "homepage": "https://api.cybai.re/",
+  "description": "DoH API",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/cletqui/doh"
+  },
+  "homepage": "https://doh.cybai.re/",
   "license": "MIT",
   "author": {
     "name": "cletqui"
