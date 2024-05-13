@@ -19,13 +19,16 @@ app.use(
 app.route("/dns-query", dnsQuery);
 
 /* SWAGGER */
-app.get("/", swaggerUI({ url: "/json" }));
+app.get("/swagger", swaggerUI({ url: "/json" }));
+
+/* ROOT */
+app.get("/", (c) => c.redirect("/swagger", 301));
 
 /* JSON */
 app.doc("/json", {
   openapi: "3.0.0",
   info: {
-    version: "0.1.1",
+    version: "0.1.2",
     title: "DoH",
   },
 });
