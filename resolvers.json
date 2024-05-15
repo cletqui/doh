@@ -1,5 +1,0 @@
-{
-  "cloudflare": "cloudflare-dns.com/dns-query",
-  "google": "dns.google/resolve",
-  "quad9": "dns.quad9.net:5053/dns-query"
-}

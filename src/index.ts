@@ -2,7 +2,9 @@ import { cors } from "hono/cors";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
 
-import dnsQuery from "./endpoints/dns-query";
+import { dnsQuery, nslookup } from "./endpoints/doh";
+//import whois from "./endpoints/whois";
+//import ipinfo from "./endpoints/ipinfo";
 
 const app = new OpenAPIHono();
 
@@ -15,17 +17,20 @@ app.use(
   })
 );
 
+/* ROOT */
+app.get("/", (c) => c.redirect("/swagger"));
+
 /* ROUTES */
 app.route("/dns-query", dnsQuery);
+app.route("/nslookup", nslookup);
+//app.route("/whois", whois);
+//app.route("/ipinfo", ipinfo);
 
 /* SWAGGER */
-app.get("/swagger", swaggerUI({ url: "/json" }));
-
-/* ROOT */
-app.get("/", (c) => c.redirect("/swagger", 301));
+app.get("/swagger", swaggerUI({ url: "/swagger/json" }));
 
 /* JSON */
-app.doc("/json", {
+app.doc("/swagger/json", {
   openapi: "3.0.0",
   info: {
     version: "0.1.2",

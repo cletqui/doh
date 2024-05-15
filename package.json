@@ -1,17 +1,17 @@
 {
-  "name": "doh",
-  "version": "0.1.2",
+  "name": "api",
+  "version": "0.1.0",
   "private": false,
-  "description": "DoH API",
+  "description": "Cyber API",
   "repository": {
     "type": "github",
-    "url": "https://github.com/cletqui/doh"
+    "url": "https://github.com/cletqui/api"
   },
-  "homepage": "https://doh.cybai.re/",
-  "license": "MIT",
   "author": {
     "name": "cletqui"
   },
+  "homepage": "https://api.cybai.re/",
+  "license": "MIT",
   "scripts": {
     "dev": "wrangler dev src/index.ts",
     "deploy": "wrangler deploy --minify src/index.ts",
