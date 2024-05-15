@@ -14,10 +14,8 @@ const resolvers = {
   quad9: "dns.quad9.net:5053/dns-query",
 };
 
-const resolversEnum = Object.keys(resolvers) as const
-
 const ParamsSchema = z.object({
-  resolver: z.enum(resolversEnum).openapi({
+  resolver: z.string({ required_error: "Resolver is required." }).openapi({
     param: {
       name: "resolver",
       in: "path",
