@@ -2,12 +2,6 @@ import { OpenAPIHono, z, createRoute } from "@hono/zod-openapi";
 
 /* DNS-QUERY */
 
-interface Resolvers {
-  cloudflare: string;
-  google: string;
-  quad9: string;
-}
-
 const resolvers = {
   cloudflare: "cloudflare-dns.com/dns-query",
   google: "dns.google/resolve",
@@ -15,7 +9,7 @@ const resolvers = {
 };
 
 const ParamsSchema = z.object({
-  resolver: z.string({ required_error: "Resolver is required." }).openapi({
+  resolver: z.enum(Object.keys(resolvers)).openapi({
     param: {
       name: "resolver",
       in: "path",
@@ -37,30 +31,30 @@ const DoHQuerySchema = z.object({
   type: z
     .string()
     .optional()
+    .default("A")
     .openapi({
       param: {
         name: "type",
         in: "query",
       },
-      default: "A",
       example: "A",
       title: "Query type",
     }),
   DO: z
     .boolean()
     .optional()
+    .default(false)
     .openapi({
       param: { name: "DO", in: "query" },
-      default: false,
       example: false,
       title: "DO bit (DNSSEC data)",
     }),
   CD: z
     .boolean()
     .optional()
+    .default(false)
     .openapi({
       param: { name: "CD", in: "query" },
-      default: false,
       example: false,
       title: "CD bit (disable validation)",
     }),
@@ -102,10 +96,10 @@ const DoHResponseSchema = z
       })
     ),
   })
-  .openapi("DoH response");
+  .openapi("DoH Record");
 
 async function query(
-  resolver: keyof Resolvers,
+  resolver: keyof typeof resolvers,
   name: string,
   type: string = "A",
   DO: boolean = false,
@@ -132,6 +126,7 @@ async function query(
 export const dnsQuery = new OpenAPIHono();
 
 const dnsQueryRoute = createRoute({
+  tags: ["DoH"],
   method: "get",
   path: "/{resolver}",
   request: { params: ParamsSchema, query: DoHQuerySchema },
@@ -179,7 +174,6 @@ interface NslookupResponse {
 
 const NslookupResponseSchema = z
   .object({
-    domain: z.string().openapi({ example: "example.com" }),
     A: DoHResponseSchema,
     AAAA: DoHResponseSchema,
     CNAME: DoHResponseSchema,
@@ -190,6 +184,7 @@ const NslookupResponseSchema = z
   .openapi("Nslookup");
 
 const nslookupRoute = createRoute({
+  tags: ["DoH"],
   method: "get",
   path: "/{resolver}",
   request: { params: ParamsSchema, query: NslookupQuerySchema },
