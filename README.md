@@ -1,13 +1,30 @@
-# DoH (doh.cybai.re)
+# API
+
+## Table of Contents
+
+- [API](#api)
+  - [Table of Contents](#table-of-contents)
+  - [Motivation](#motivation)
+  - [URLs](#urls)
+    - [Swagger](#swagger)
+    - [Endpoints](#endpoints)
+  - [Roadmap](#roadmap)
+  - [Endpoints ideas](#endpoints-ideas)
 
 ## Motivation
 
-DoH on the go, easy to deploy, multiple resolvers.
-Bypass security checks.
+Cyber API on the go, deploy endpoints for cybersecurity actions.
 
-## RFC
+## URLs
 
-[RFC](https://www.rfc-editor.org/rfc/rfc8484)
+[api.cybai.re](https://api.cybai.re/)
+
+### Swagger
+
+[Swagger](https://api.cybai.re/swagger)
+[Swagger JSON](https://api.cybai.re/swagger/json)
+
+### Endpoints
 
     /dns-query: DNS records
     /certs : Certificate Transparency
@@ -16,14 +33,21 @@ Bypass security checks.
 
 ## Roadmap
 
-### DNS
+- [x] Add more DoH resolvers to resolvers.json
+- [ ] Improve `README.md`
+- [ ] Handle errors returned by DoH or crt.sh
+- [ ] Validation based on { content: `application/json` } header
+- [ ] Add more parameters for CRT ("limit" to limit the number of certificates returned)
+- [ ] Implement [IP Info](http://ip-api.com/json/{ip}) endpoint
+- [ ] Implement [Whois](https://rdap.org/domain/{domain}) endpoint
+- [ ] Implement Spamhaus endpoint for [domains](https://www.spamhaus.org/api/v1/sia-proxy/api/intel/v2/byobject/domain/malakoffhumanis.com/overview) and [IP](https://www.spamhaus.org/api/v1/sia-proxy/api/intel/v1/byobject/cidr/ALL/listings/live/{ip})
+- [ ] Fix the linting issue in `doh.ts`
+- [ ] Add more methods for the endpoints
 
-- [ ] Handle errors returned by DoH
-- [ ] Write README.md
-- [ ] Add more DoH resolvers to resolvers.json
-- [ ] Validation based on { content: "application/json" } header
+## Endpoints ideas
 
-- [ ] Handle errors returned by DoH
-- [ ] Write README.md
-- [ ] Add more DoH resolvers to resolvers.json
-- [ ] Validation based on { content: "application/json" } header
+Web Related Endpoints
+
+    /header: Fetch website header
+    /pages: Fetch all website pages
+    /ping: Ping domain to check latency and status
