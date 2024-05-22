@@ -2,14 +2,14 @@ import { OpenAPIHono, z, createRoute } from "@hono/zod-openapi";
 
 /* IP INFO */
 
-const QuerySchema = z.object({
+const ParamsSchema = z.object({
   ip: z.string({ required_error: "IP is required." }).openapi({
     param: {
       name: "ip",
-      in: "query",
+      in: "path",
     },
     example: "162.10.209.81",
-    title: "Query IP",
+    title: "IP",
   }),
 });
 
@@ -63,22 +63,25 @@ const IPInfoResponseSchema = z
 
 async function query(ip: string): Promise<IPInfoResponse> {
   const url = `https://freeipapi.com/api/json/${ip}`;
-  console.log(url);
   const response = await fetch(url, {
     method: "GET",
     headers: {
       accept: "application/json",
     },
   });
-  console.log(response.ok, response.status, response.statusText); // TODO handle returned errors
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch data: ${response.status} ${response.statusText}`
+    );
+  } // TODO handle returned errors
   return (await response.json()) as IPInfoResponse;
 }
 
 const ipInfoRoute = createRoute({
   tags: ["IP"],
   method: "get",
-  path: "/",
-  request: { query: QuerySchema },
+  path: "/{ip}",
+  request: { params: ParamsSchema },
   responses: {
     200: {
       content: {
@@ -89,12 +92,16 @@ const ipInfoRoute = createRoute({
       description: "Fetch IP info data",
     },
   },
+  externalDocs: {
+    description: "freeipapi.com",
+    url: "https://freeipapi.com/",
+  },
 });
 
 export const ipInfo = new OpenAPIHono();
 
 ipInfo.openapi(ipInfoRoute, async (c: any) => {
-  const { ip } = c.req.valid("query");
+  const { ip } = c.req.valid("param");
   const response = await query(ip);
   return c.json(response);
 });

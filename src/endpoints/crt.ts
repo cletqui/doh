@@ -2,15 +2,18 @@ import { OpenAPIHono, z, createRoute } from "@hono/zod-openapi";
 
 /* CRT */
 
-const QuerySchema = z.object({
+const ParamsSchema = z.object({
   domain: z.string({ required_error: "Domain is required." }).openapi({
     param: {
       name: "domain",
-      in: "query",
+      in: "path",
     },
     example: "example.com",
-    title: "Query domain",
+    title: "Domain name",
   }),
+});
+
+const QuerySchema = z.object({
   exclude: z
     .string()
     .optional()
@@ -83,22 +86,26 @@ const CrtResponseSchema = z
 
 async function query(domain: string): Promise<CrtResponse[]> {
   const url = `https://crt.sh/?Identity=${domain}&output=json`;
-  console.log(url)
+  console.log(url);
   const response = await fetch(url, {
     method: "GET",
     headers: {
       accept: "application/json",
     },
   });
-  console.log(response.ok, response.status, response.statusText); // TODO handle returned errors
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch data: ${response.status} ${response.statusText}`
+    );
+  } // TODO handle returned errors
   return (await response.json()) as CrtResponse[];
 }
 
 const crtRoute = createRoute({
-  tags: ["CRT"],
+  tags: ["Domain"],
   method: "get",
-  path: "/",
-  request: { query: QuerySchema },
+  path: "/{domain}",
+  request: { params: ParamsSchema, query: QuerySchema },
   responses: {
     200: {
       content: {
@@ -109,12 +116,14 @@ const crtRoute = createRoute({
       description: "Fetch crt.sh data",
     },
   },
+  description: "Certificate Transparency",
+  externalDocs: { description: "crt.sh", url: "https://crt.sh/" },
 });
 
 export const crt = new OpenAPIHono();
 
 crt.openapi(crtRoute, async (c: any) => {
-  const { domain } = c.req.valid("query");
+  const { domain } = c.req.valid("param");
   const response = await query(domain);
   return c.json(response);
 });
