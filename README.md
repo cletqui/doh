@@ -38,7 +38,7 @@ Cyber API on the go, deploy endpoints for cybersecurity actions.
 - [ ] Handle errors returned by DoH or crt.sh
 - [ ] Validation based on { content: `application/json` } header
 - [ ] Add more parameters for CRT ("limit" to limit the number of certificates returned)
-- [ ] Implement [IP Info](http://ip-api.com/json/{ip}) endpoint
+- [ ] Implement [IP Info](https://freeipapi.com/api/json/{ip}) endpoint
 - [ ] Implement [Whois](https://rdap.org/domain/{domain}) endpoint
 - [ ] Implement Spamhaus endpoint for [domains](https://www.spamhaus.org/api/v1/sia-proxy/api/intel/v2/byobject/domain/malakoffhumanis.com/overview) and [IP](https://www.spamhaus.org/api/v1/sia-proxy/api/intel/v1/byobject/cidr/ALL/listings/live/{ip})
 - [ ] Fix the linting issue in `doh.ts`

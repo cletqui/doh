@@ -3,13 +3,13 @@ import { OpenAPIHono, z, createRoute } from "@hono/zod-openapi";
 /* CRT */
 
 const QuerySchema = z.object({
-  q: z.string({ required_error: "Query is required." }).openapi({
+  domain: z.string({ required_error: "Domain is required." }).openapi({
     param: {
-      name: "q",
+      name: "domain",
       in: "query",
     },
     example: "example.com",
-    title: "Query name",
+    title: "Query domain",
   }),
   exclude: z
     .string()
@@ -82,7 +82,8 @@ const CrtResponseSchema = z
   .openapi("Certificates");
 
 async function query(domain: string): Promise<CrtResponse[]> {
-  const url = `https://crt.sh/?q=${domain}&output=json`;
+  const url = `https://crt.sh/?Identity=${domain}&output=json`;
+  console.log(url)
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -113,7 +114,7 @@ const crtRoute = createRoute({
 export const crt = new OpenAPIHono();
 
 crt.openapi(crtRoute, async (c: any) => {
-  const { q } = c.req.valid("query");
-  const response = await query(q);
+  const { domain } = c.req.valid("query");
+  const response = await query(domain);
   return c.json(response);
 });

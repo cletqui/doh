@@ -3,9 +3,10 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
 
 import { dnsQuery, nslookup } from "./endpoints/doh";
+import { reverseDns } from "./endpoints/reverse-dns";
 import { crt } from "./endpoints/crt";
 //import whois from "./endpoints/whois";
-//import ipinfo from "./endpoints/ipinfo";
+import { ipInfo } from "./endpoints/ipinfo";
 
 const app = new OpenAPIHono();
 
@@ -24,9 +25,10 @@ app.get("/", (c) => c.redirect("/swagger"));
 /* ROUTES */
 app.route("/dns-query", dnsQuery);
 app.route("/nslookup", nslookup);
+app.route("/reverse-dns", reverseDns);
 app.route("/certs", crt);
 //app.route("/whois", whois);
-//app.route("/ipinfo", ipinfo);
+app.route("/ipinfo", ipInfo);
 
 /* SWAGGER */
 app.get("/swagger", swaggerUI({ url: "/swagger/json" }));
@@ -47,7 +49,7 @@ app.doc("/swagger/json", {
       url: "https://opensource.org/license/MIT",
     },
   },
-  servers: [{ url: "https://api.cybai.re/", description: "API" }],
+  // servers: [{ url: "https://api.cybai.re/", description: "API" }],
   tags: [
     {
       name: "DoH",
@@ -61,6 +63,22 @@ app.doc("/swagger/json", {
       name: "CRT",
       description: "Certificate Transparency",
       externalDocs: { description: "crt.sh", url: "https://crt.sh/" },
+    },
+    {
+      name: "RDNS",
+      description: "Reverse DNS",
+      externalDocs: {
+        description: "reversedns.io",
+        url: "https://reversedns.io/",
+      },
+    },
+    {
+      name: "IP",
+      description: "IP Info",
+      externalDocs: {
+        description: "freeipapi.com/",
+        url: "https://freeipapi.com/",
+      },
     },
   ],
 });
