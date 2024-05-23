@@ -7,6 +7,7 @@ import { whois } from "./endpoints/whois";
 import { crt } from "./endpoints/crt";
 import { ipInfo } from "./endpoints/ipinfo";
 import { reverseDns } from "./endpoints/reverse-dns";
+import { reputationDomain, reputationIP } from "./endpoints/reputation";
 
 const app = new OpenAPIHono();
 
@@ -23,6 +24,8 @@ app.route("/whois", whois);
 app.route("/certs", crt);
 app.route("/ipinfo", ipInfo);
 app.route("/reverse-dns", reverseDns);
+app.route("/reputation/domain", reputationDomain);
+app.route("/reputation/ip", reputationIP);
 
 /* SWAGGER */
 app.get("/swagger", swaggerUI({ url: "/swagger/json" }));
@@ -32,7 +35,7 @@ app.doc("/swagger/json", {
   openapi: "3.0.0",
   info: {
     title: "API",
-    version: "0.2.0",
+    version: "0.2.1",
     description:
       "Cyber [API](https://api.cybai.re/) - [GitHub](https://github.com/cletqui/api)",
     contact: {
@@ -44,7 +47,7 @@ app.doc("/swagger/json", {
       url: "https://opensource.org/license/MIT",
     },
   },
-  servers: [{ url: "https://api.cybai.re/", description: "API" }],
+  // servers: [{ url: "https://api.cybai.re/", description: "API" }],
   tags: [
     {
       name: "Domain",
